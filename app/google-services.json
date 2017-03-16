@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "926580328493-jn0iosgl0dcj7bv5ke1pdoja4nk2jfdg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.thereckoner.reckoner",
+            "certificate_hash": "2f10620121a258578e09256e801a71908dc1b5e3"
+          }
+        },
+        {
           "client_id": "926580328493-s03kuvl6j88q1elqp8ccf5mrauashuo8.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926580328493-s03kuvl6j88q1elqp8ccf5mrauashuo8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

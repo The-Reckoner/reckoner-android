@@ -24,6 +24,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    //Loading animation
+    //Flip animation
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
@@ -32,9 +35,12 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    compile 'com.github.SaeedMasoumi:FAB-Loading:0.6.0'
+    compile 'com.github.openaphid:android-flip:0.9.7'
+    compile 'com.google.firebase:firebase-crash:10.0.1'
     testCompile 'junit:junit:4.12'
-
-    compile 'com.github.SaeedMasoumi:FAB-Loading:0.6.0' //Loading animation
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

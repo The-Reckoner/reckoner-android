@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 /**
  * Created by Varun Venkataramanan.
  *
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawer = (DrawerLayout) findViewById(ca.thereckoner.reckoner.R.id.drawer_layout);
         nvDrawer = (NavigationView) findViewById(ca.thereckoner.reckoner.R.id.navView);
+
         setupDrawerContent(nvDrawer); //Setup nav drawer
 
         drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, ca.thereckoner.reckoner.R.string.drawer_open,  ca.thereckoner.reckoner.R.string.drawer_close); //Setup hamburger
@@ -106,11 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.v(TAG, "life");
                 fragment = ArticleListFragment.newInstance(getString(ca.thereckoner.reckoner.R.string.life));
                 break;
-            /* Disabled for alpha build
-            case R.id.nav_humansOfGarneau:
-                Log.v(TAG, "humans of garneau");
-                fragment = HOGFragment.newInstance();
-                break; */
             default:
                 Log.v(TAG, "default");
                 fragment = ArticleListFragment.newInstance("");

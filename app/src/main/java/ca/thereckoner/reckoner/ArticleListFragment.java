@@ -1,19 +1,12 @@
 package ca.thereckoner.reckoner;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import ca.thereckoner.reckoner.View.OnItemClickListener;
-import ca.thereckoner.reckoner.View.ArticleListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,22 +21,11 @@ import java.util.List;
 public class ArticleListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "ARG_CATEGORY_NAME";
+    private static final String ARG_CATEGORY_NAME = "ARG_CATEGORY_NAME";
 
-    private String mCategory;
+    private String category;
 
     private OnFragmentInteractionListener mListener;
-
-    RecyclerView mRecyclerView; //The main recycler view
-    LinearLayoutManager mLayoutManager; //Layout manager for the recycler view
-    ArticleListAdapter mAdapter; //Adapter to display the data in the recycler view
-
-    //Used to check for scrolled state
-    private boolean loading = true; //Changed if new articles need to be loaded when scrolled
-    int pastVisiblesItems;
-    int visibleItemCount;
-    int totalItemCount;
-    int nextPage = 2; //Next page to load. First page loaded by default
 
     private final String TAG = "ArticleListFragment";
 
@@ -62,7 +44,7 @@ public class ArticleListFragment extends Fragment {
     public static ArticleListFragment newInstance(String category) {
         ArticleListFragment fragment = new ArticleListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, category);
+        args.putString(ARG_CATEGORY_NAME, category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,7 +53,7 @@ public class ArticleListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCategory = getArguments().getString(ARG_PARAM1);
+            category = getArguments().getString(ARG_CATEGORY_NAME);
         }
     }
 
@@ -82,37 +64,14 @@ public class ArticleListFragment extends Fragment {
 
         View view = inflater.inflate(ca.thereckoner.reckoner.R.layout.fragment_article_list, container, false);
 
-        mRecyclerView =  (RecyclerView) view.findViewById(ca.thereckoner.reckoner.R.id.articleList);
-        mRecyclerView.setHasFixedSize(true); //Size can't change
-
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addOnScrollListener(mOnScroll);
-
-
-        //mRecyclerView.setOnClickListener(mOnClick);
-
         loadArticles(); //Load the articles
 
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        /*if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
     }
 
     @Override
@@ -143,7 +102,7 @@ public class ArticleListFragment extends Fragment {
         //Make call to API
         List articles;
         try {
-            articles = API.getArticles(1, mCategory); //Pass in the global fragment arg
+            articles = API.getArticles(1, category); //Pass in the global fragment arg
         }catch (Exception e){
             //e.printStackTrace();
             articles = new ArrayList();
@@ -151,64 +110,8 @@ public class ArticleListFragment extends Fragment {
 
         if(articles != null) { //If articles are returned
             //Setup the adapter with the on click listneer
-            mAdapter = new ArticleListAdapter(articles, new OnItemClickListener() {
-                @Override
-                public void onItemClick(Article a) {
-                    Log.v(TAG, "Item clicked: " + a.getTitle()); //Log the article that was clicked
 
-                    //Display ReadingActivity with the selected article
-                    Intent intent = new Intent(getContext(), ReadingActivity.class);
-                    intent.putExtra(getString(ca.thereckoner.reckoner.R.string.articleParam), a);
-                    startActivity(intent);
-                }
-            });
-
-            mRecyclerView.setAdapter(mAdapter); //Set the adapter to the recycler view
         }
     }
-
-    /**
-     * Method to handle the loading of more articles on scroll to the bottom on the recycler view.
-     */
-    RecyclerView.OnScrollListener mOnScroll = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-
-            if(dy > 0){ //check for scroll down
-                //Get the current state data
-                int pos = mRecyclerView.getLayoutManager().getItemCount();
-                visibleItemCount = mLayoutManager.getChildCount();
-                totalItemCount = mLayoutManager.getItemCount();
-                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
-
-                if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                    loading = false;
-                    Log.v(TAG, "Loading more articles");
-
-                    //Load more articles
-                    List articles;
-                    try {
-                        articles = API.getArticles(nextPage, mCategory);
-                        nextPage++;
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        articles = new ArrayList();
-                    }
-
-                    mAdapter.addArticles(articles); //Add the new articles to the adapter
-                    mRecyclerView.invalidate();
-                    mRecyclerView.getLayoutManager().scrollToPosition(pastVisiblesItems); //Reset the pos
-                }
-            }
-        }
-
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            //VERY IMPORTANT that this is blank to allow for proper scroll reload handling
-        }
-
-
-    };
 
 }
